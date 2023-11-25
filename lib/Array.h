@@ -2,9 +2,9 @@
 
 #include <stddef.h>
 #include <cstdint>
-#include <cstring>
-#include <stdexcept>
+#include <algorithm>
 #include "UInt17View.h"
+#include "utils.h" // TODO(awakair): rename files to math google code style
 
 class Array {
  public:
@@ -19,5 +19,6 @@ class Array {
   
  private:
   uint8_t* data_;
+  size_t length_in_bytes_;
   size_t length_;
 };
