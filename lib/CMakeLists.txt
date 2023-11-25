@@ -1,5 +1,5 @@
 add_library(array3d
-        Array3DView.cpp
-        Array.cpp
-        UInt17View.cpp
-        UInt17View.cpp)
+        array_3d_view.cc
+        array_view.cc
+        array.cc
+        uint17_view.cc)

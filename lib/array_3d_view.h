@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Array.h"
+#include "array.h"
 #include <iostream>
 #include <cstdint>
+
+namespace uint17 {
 
 class Array3DView {
  public:
@@ -10,3 +12,5 @@ class Array3DView {
  private:
   Array data_;
 };
+
+} // namespace uin17

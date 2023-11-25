@@ -1,17 +1,19 @@
-#include "UInt17View.h"
+#include "uint17_view.h"
+
+namespace uint17 {
 
 namespace bitwise_actions {
-  const uint8_t kResetFirstByte[] = {0b00000000, 0b10000000, 0b11000000, 0b11100000,
-				     0b11110000, 0b11111000, 0b11111100, 0b11111110};
-  const uint8_t kResetLastByte[] = {0b0111111, 0b00111111, 0b00011111, 0b00001111,
-				    0b00000111, 0b00000011, 0b00000001, 0b00000000};
-  const uint8_t kGetFirstByte[] = {0b11111111, 0b01111111, 0b00111111, 0b00011111,
-				   0b00001111, 0b00000111, 0b00000011, 0b00000001};
-  const uint8_t kGetLastByte[] = {0b10000000, 0b11000000, 0b11100000, 0b11110000,
-				  0b11111000, 0b11111100, 0b11111110, 0b11111111};
+const uint8_t kResetFirstByte[] = {0b00000000, 0b10000000, 0b11000000, 0b11100000,
+                                   0b11110000, 0b11111000, 0b11111100, 0b11111110};
+const uint8_t kResetLastByte[] = {0b0111111, 0b00111111, 0b00011111, 0b00001111,
+                                  0b00000111, 0b00000011, 0b00000001, 0b00000000};
+const uint8_t kGetFirstByte[] = {0b11111111, 0b01111111, 0b00111111, 0b00011111,
+                                 0b00001111, 0b00000111, 0b00000011, 0b00000001};
+const uint8_t kGetLastByte[] = {0b10000000, 0b11000000, 0b11100000, 0b11110000,
+                                0b11111000, 0b11111100, 0b11111110, 0b11111111};
 }
 
-UInt17View::UInt17View(uint8_t *data, const uint8_t offset)
+UInt17View::UInt17View(uint8_t* data, const uint8_t offset)
   : data_(data), start_(offset), end_(17 - (8 - start_ + 8) - 1) {}
 
 UInt17View& UInt17View::SetToZero() {
@@ -54,22 +56,7 @@ UInt17View& UInt17View::operator=(const uint32_t number) {
 }
 
 UInt17View& UInt17View::operator=(const uint16_t number) {
-  this->SetToZero();
-
-  /*
-    In fact same as operator=(uint32_t number) but first bit now always will be zero
-   */
-
-  const auto n = 8 - start_;
-  const auto shift_first_part = 17 - n;
-  data_[0] |= static_cast<uint8_t>(number >> shift_first_part);
-  const auto shift_second_part = 17 - n - 8;
-  data_[1] = static_cast<uint8_t>(number >> shift_second_part);
-  const auto left_bits = 17 - n - 8;
-  const auto shift_third_part = 8 - left_bits;
-  data_[2] |= static_cast<uint8_t>(number) << shift_third_part;
- 
-  return *this;
+  return this->operator=(static_cast<uint32_t>(number));
 }
 
 uint32_t UInt17View::ToUInt32() const { // much simpler than operator=, see it first
@@ -101,7 +88,9 @@ UInt17View& UInt17View::operator*=(const uint32_t other) {
   return (*this = this->ToUInt32() * other);
 }
 
-std::ostream& operator<<(std::ostream& stream, const UInt17View& value) {
+} // namespace uint17
+
+std::ostream& operator<<(std::ostream& stream, const uint17::UInt17View& value) {
   stream << value.ToUInt32();
 
   return stream;

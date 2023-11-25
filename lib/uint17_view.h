@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <iostream>
 
+namespace uint17 {
+
 class UInt17View {
  public:
   UInt17View(uint8_t* data, uint8_t offset);
@@ -23,4 +25,6 @@ class UInt17View {
   // [start_, end_]
 };
 
-std::ostream &operator<<(std::ostream &stream, const UInt17View &value);
+} // namespace uint17
+
+std::ostream &operator<<(std::ostream &stream, const uint17::UInt17View &value);

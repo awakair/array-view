@@ -8,11 +8,11 @@ project(
 )
 
 set(CMAKE_CXX_STANDARD 20)
-add_compile_options(-Wall -Wextra -pedantic -Werror)
+add_compile_options(-Wall -Wextra -Werror -pedantic-errors)
 
 add_subdirectory(lib)
 add_subdirectory(bin)
 
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
 add_subdirectory(tests)
