@@ -85,4 +85,4 @@ const UInt17View Array::At(size_t index) const {
   return this->operator[](index);
 }
 
-} // namespace uin17
+} // namespace uint17

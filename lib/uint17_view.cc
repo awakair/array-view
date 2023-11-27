@@ -89,7 +89,7 @@ UInt17View& UInt17View::operator*=(const uint32_t other) {
 }
 
 } // namespace uint17
-
+å
 std::ostream& operator<<(std::ostream& stream, const uint17::UInt17View& value) {
   stream << value.ToUInt32();
 

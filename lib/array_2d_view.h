@@ -3,18 +3,17 @@
 #include <stddef.h>
 #include <cstdint>
 #include "array.h"
-#include "array_2d_view.h"
+#include "array_view.h"
 
 namespace uint17 {
 
-class Array3DView {
+class Array2DView {
  public:
-  Array3DView(Array& array, size_t start, size_t width, size_t length);
-  Array2DView operator[](size_t index);
-  const Array2DView operator[](size_t index) const;
+  Array2DView(Array& array, size_t start, size_t width, size_t length);
+  ArrayView operator[](size_t index);
+  const ArrayView operator[](size_t index) const;
   size_t GetLength();
   size_t GetWidth();
-  size_t GetHeight();
   UInt17View Get(size_t i, size_t j);
   const UInt17View Get(size_t i, size_t j) const;
  private:
@@ -23,7 +22,6 @@ class Array3DView {
   size_t end_;
   size_t width_;
   size_t length_;
-  size_t height_;
 };
 
 } // namespace uint17
