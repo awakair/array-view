@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <lib/uint17_view.h>
 #include <lib/array.h>
-#include <lib/array_n_view.h>
+#include <lib/array_view.h>
 
  using namespace uint17;
 
