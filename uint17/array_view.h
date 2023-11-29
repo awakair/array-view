@@ -27,7 +27,7 @@ namespace concepts {
     t[index] += t[index];
     t[index] -= t[index];
   };
-}
+}  // namespace concepts
 
 template <size_t Dimension, concepts::IsRandomAccessContainer Container>
 struct ViewWithContainer;
@@ -65,11 +65,11 @@ class ArrayView {
   }
 
   [[nodiscard]] size_t GetDimension(size_t index) const { return dimensions_[index]; }
-  [[nodiscard]] size_t GetStart() const { return start_; };
+  [[nodiscard]] size_t GetStart() const { return start_; }
   [[nodiscard]] Container& GetContainer() const { return *container_; }
 
   template <typename... Args> requires concepts::IsDimensions<Dimension, Args...>
-  decltype(auto) Get(Args... dimensions){
+  decltype(auto) Get(Args... dimensions) {
     size_t arguments[] = {(dimensions)...};
     size_t real_index = start_;
     for (size_t i = 0; i != Dimension - 1; ++i) {
@@ -173,7 +173,7 @@ class ArrayView<1, Container> {
   }
 
   [[nodiscard]] size_t GetLength() const { return end_ - start_; }
-  [[nodiscard]] size_t GetStart() const { return start_; };
+  [[nodiscard]] size_t GetStart() const { return start_; }
   [[nodiscard]] Container& GetContainer() const { return *container_; }
   decltype(auto) Get(size_t index) { return container_->operator[](start_ + index); }
   decltype(auto) Get(size_t index) const {
@@ -248,7 +248,7 @@ std::ostream& operator<<(std::ostream& stream, const uint17::ArrayView<Dimension
   return stream;
 }
 
-template <size_t Dimension,uint17::concepts::IsRandomAccessContainer Container>
+template <size_t Dimension, uint17::concepts::IsRandomAccessContainer Container>
 std::istream& operator>>(std::istream& stream, uint17::ArrayView<Dimension, Container>& view) {
   Container& data = view.GetContainer();
   for (size_t i = view.GetStart(); i != data.size(); ++i) stream >> data[i];
