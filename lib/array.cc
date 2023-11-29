@@ -1,7 +1,4 @@
 #include "array.h"
-#include <_types/_uint32_t.h>
-#include <initializer_list>
-#include <stdexcept>
 
 namespace uint17 {
 
@@ -25,7 +22,7 @@ Array::Array(std::initializer_list<uint32_t> elems) : length_(elems.size()) {
 }
 
 Array::~Array() {
-  if (data_ != nullptr) delete[] data_;
+  delete[] data_;
 }
 
 Array::Array(Array&& other) : length_in_bytes_(other.length_in_bytes_), length_(other.length_) {
@@ -40,8 +37,9 @@ Array::Array(const Array& other) : Array(other.length_) {
 }
 
 Array& Array::operator=(const Array& other) {
+  if (this == &other) return *this;
   if (length_ != other.length_) {
-    if (data_ != nullptr) delete[] data_;
+    delete[] data_;
     length_ = other.length_;
     length_in_bytes_ = other.length_in_bytes_;
     data_ = new uint8_t[length_in_bytes_];
@@ -59,7 +57,9 @@ Array& Array::operator=(Array&& other) {
   return *this;
 }
 
-size_t Array::GetLength() const { return length_; };
+size_t Array::GetLength() const { return length_; }
+
+size_t Array::size() const { return length_; }
 
 UInt17View Array::operator[](size_t index) {
   const auto start_of_number = index * 17;
@@ -85,4 +85,4 @@ const UInt17View Array::At(size_t index) const {
   return this->operator[](index);
 }
 
-} // namespace uint17
+}  // namespace uint17

@@ -161,34 +161,34 @@ TEST(UInt17ViewTest, MultTest) {
 
 TEST(ArrayViewTest, EmptyTest) {
   Array array = {1, 2, 3, 4, 5};
-  ArrayView view(array);
+  ArrayView<1> view(array);
 }
 
 TEST(ArrayViewTest, ChangeValuesTest) {
   Array array = {1, 2, 3, 4, 5};
-  ArrayView view(array);
+  ArrayView<1> view(array);
   view[0] = 2u;
   ASSERT_EQ(array[0].ToUInt32(), 2u);
 }
 
 TEST(ArrayViewTest, PartialViewTest) {
   Array array = {1, 2, 3, 4, 5};
-  ArrayView view(array, 1, 4);
+  ArrayView<1> view(array, 1, 4);
   view[0] = 2u;
   ASSERT_EQ(array[1].ToUInt32(), 2u);
 }
 
 TEST(ArrayViewTest, WrongArrayViewCreated) {
   Array array = {1, 2, 3, 4, 5};
-  ASSERT_ANY_THROW(ArrayView(array, 3, 1));
-  ASSERT_ANY_THROW(ArrayView(array, 6, 7));
+  ASSERT_ANY_THROW(ArrayView<1>(array, 3, 1));
+  ASSERT_ANY_THROW(ArrayView<1>(array, 6, 7));
 }
 
-TEST(ArrayViewTest, AtTest) {
+TEST(ArrayViewTest, OutOfBoundsTest) {
   Array array = {1, 2, 3, 4, 5};
-  ArrayView view1(array, 2, 5);
-  ArrayView view2(array);
+  ArrayView<1> view1(array, 2, 5);
+  ArrayView<1> view2(array);
 
-  ASSERT_EQ(view1.At(0).ToUInt32(), view2.At(2).ToUInt32());
-  ASSERT_THROW(view1.At(4), std::out_of_range);
+  ASSERT_EQ(view1[0].ToUInt32(), view2[2].ToUInt32());
+  ASSERT_THROW(view1[4], std::out_of_range);
 }

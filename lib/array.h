@@ -1,13 +1,10 @@
 #pragma once
 
-#include <_types/_uint32_t.h>
-#include <initializer_list>
-#include <stddef.h>
+#include <cstddef>
 #include <cstdint>
-#include <algorithm>
 #include <stdexcept>
 #include "uint17_view.h"
-#include "utils.h" // TODO(awakair): rename files to math google code style
+#include "utils.h"
 
 namespace uint17 {
 
@@ -20,7 +17,8 @@ class Array {
   Array(const Array& other);
   Array& operator=(const Array& other);
   Array& operator=(Array&& other);
-  size_t GetLength() const;
+  [[nodiscard]] size_t GetLength() const;
+  [[nodiscard]] size_t size() const;
   UInt17View operator[](size_t index);
   const UInt17View operator[](size_t index) const;
   UInt17View At(size_t index);
@@ -31,4 +29,4 @@ class Array {
   size_t length_;
 };
 
-} // namespace uint17
+}  // namespace uint17
