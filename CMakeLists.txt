@@ -12,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_compile_options(-Wall -Wextra -Werror -pedantic-errors)
 #add_compile_options(-Wall -Wextra -pedantic)
 
-add_subdirectory(lib)
+add_subdirectory(uint17)
 add_subdirectory(bin)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

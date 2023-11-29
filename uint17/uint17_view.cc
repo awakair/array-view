@@ -58,6 +58,10 @@ UInt17View& UInt17View::operator=(const uint32_t number) {
 UInt17View& UInt17View::operator=(const uint16_t number) {
   return this->operator=(static_cast<uint32_t>(number));
 }
+UInt17View& UInt17View::operator=(const UInt17View& other) {
+  return this->operator=(other.ToUInt32());
+}
+
 
 uint32_t UInt17View::ToUInt32() const {  // much simpler than operator=, see it first
   const auto shift_first_part = 8 + end_ + 1;
@@ -95,7 +99,14 @@ std::ostream& operator<<(std::ostream& stream, const uint17::UInt17View& value) 
 
   return stream;
 }
-std::istream &operator>>(std::istream &stream, uint17::UInt17View &value) {
+std::istream& operator>>(std::istream& stream, uint17::UInt17View& value) {
+  uint32_t number;
+  stream >> number;
+  value = number;
+
+  return stream;
+}
+std::istream& operator>>(std::istream& stream, uint17::UInt17View&& value) {
   uint32_t number;
   stream >> number;
   value = number;

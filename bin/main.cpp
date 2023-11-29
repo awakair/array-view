@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cstdint>
 #include <vector>
-#include <lib/uint17_view.h>
-#include <lib/array.h>
-#include <lib/array_view.h>
+#include <uint17/uint17_view.h>
+#include <uint17/array.h>
+#include <uint17/array_view.h>
 
  using namespace uint17;
 
@@ -37,11 +37,11 @@ int main() {
 //    std::cout << some[i] << " ";
 //  }
   size_t a = 2, b = 2, c = 2;
-  auto [view, array] = ArrayView<3, std::vector<std::string>>::MakeArray(a, b, c);
-  view[0][0][0] = "2u";
-  view[0][0][1] = "3u";
-  view[0][1][0] = "4u";
-  view[0][1][1] = "5u";
+  auto [view, array] = ArrayView<3, std::vector<int>>::MakeArray(a, b, c);
+  view[0][0][0] = 1;
+  view[0][0][1] = 2;
+  view[0][1][0] = 3;
+  view[0][1][1] = 4;
 
   std::cout << view;
   std::cout << array->operator[](0);

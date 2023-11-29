@@ -12,7 +12,7 @@ namespace uint17 {
 
 namespace concepts {
   template <typename T>
-  concept IsSize = std::same_as<size_t, T>;
+  concept IsSize = std::convertible_to<T, size_t>;
   template <size_t Dimension, typename... Args>
   concept IsDimensions = ((IsSize<Args> && ...) && sizeof...(Args) == Dimension);
   template <typename T>
@@ -56,13 +56,16 @@ class ArrayView {
   }
 
   ArrayView<Dimension - 1, Container> operator[](size_t index) {
-    return ArrayView<Dimension - 1, Container>(*container_, start_ + dimensions_[0] * index, dimensions_ + 1);
+    if (index >= dimensions_[0]) throw std::out_of_range("ArrayView::operator[]");
+    return ArrayView<Dimension - 1, Container>(*container_, start_ + (end_ - start_) / dimensions_[0] * index, dimensions_ + 1);
   }
   const ArrayView<Dimension - 1, Container> operator[](size_t index) const {
-    return ArrayView<Dimension - 1, Container>(*container_, start_ + dimensions_[0] * index, dimensions_ + 1);
+    if (index >= dimensions_[0]) throw std::out_of_range("ArrayView::operator[]");
+    return ArrayView<Dimension - 1, Container>(*container_, start_ + (end_ - start_) / dimensions_[0] * index, dimensions_ + 1);
   }
 
   [[nodiscard]] size_t GetDimension(size_t index) const { return dimensions_[index]; }
+  [[nodiscard]] size_t GetStart() const { return start_; };
   [[nodiscard]] Container& GetContainer() const { return *container_; }
 
   template <typename... Args> requires concepts::IsDimensions<Dimension, Args...>
@@ -89,7 +92,8 @@ class ArrayView {
   }
 
   // useless methods
-  ViewWithContainer<Dimension, Container> operator*(uint32_t lambda) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<Dimension, Container> operator*(uint32_t lambda)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
@@ -99,7 +103,8 @@ class ArrayView {
 
     return {view, container};
   }
-  ViewWithContainer<Dimension, Container> operator+(const ArrayView<Dimension, Container>& other) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<Dimension, Container> operator+(const ArrayView<Dimension, Container>& other)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
     for (size_t i = 0; i != Dimension; ++i) {
       if (dimensions_[i] != other.dimensions_[i]) {
         throw std::logic_error("ArrayView::operator+ different dimensions used");
@@ -108,13 +113,14 @@ class ArrayView {
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
-      container->operator[](i) += other.dimensions_[other.start_ + i];
+      container->operator[](i) += other.container_->operator[](other.start_ + i);
     }
     auto view = ArrayView(*container, 0, dimensions_);
 
     return {view, container};
   }
-  ViewWithContainer<Dimension, Container> operator-(const ArrayView<Dimension, Container>& other) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<Dimension, Container> operator-(const ArrayView<Dimension, Container>& other)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
     for (size_t i = 0; i != Dimension; ++i) {
       if (dimensions_[i] != other.dimensions_[i]) {
         throw std::logic_error("ArrayView::operator+ different dimensions used");
@@ -123,7 +129,7 @@ class ArrayView {
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
-      container->operator[](i) -= other.dimensions_[other.start_ + i];
+      container->operator[](i) -= other.container_->operator[](other.start_ + i);
     }
     auto view = ArrayView(*container, 0, dimensions_);
 
@@ -147,14 +153,11 @@ class ArrayView {
 template <concepts::IsRandomAccessContainer Container>
 class ArrayView<1, Container> {
  public:
-  ArrayView(Container& container): container_(&container), start_(0), end_(container.size() - 1) {}
-  ArrayView(Container& container, size_t start, const size_t* end): ArrayView(container, start, start + *end) {}
-  ArrayView(Container& container, size_t start, size_t end): container_(&container), start_(start), end_(end) {
-    if (end > container.size()) {
+  ArrayView(Container& container): container_(&container), start_(0), end_(container.size()) {}
+  ArrayView(Container& container, size_t start, const size_t* end): ArrayView(container, start, *end) {}
+  ArrayView(Container& container, size_t start, size_t length): container_(&container), start_(start), end_(start_ + length) {
+    if (end_ > container.size()) {
       throw std::out_of_range("ArrayView::ArrayView given offset + length > container length");
-    }
-    if (start > end) {
-      throw std::logic_error("ArrrayView::ArrayView start > end");
     }
   }
   
@@ -170,6 +173,7 @@ class ArrayView<1, Container> {
   }
 
   [[nodiscard]] size_t GetLength() const { return end_ - start_; }
+  [[nodiscard]] size_t GetStart() const { return start_; };
   [[nodiscard]] Container& GetContainer() const { return *container_; }
   decltype(auto) Get(size_t index) { return container_->operator[](start_ + index); }
   decltype(auto) Get(size_t index) const {
@@ -177,7 +181,8 @@ class ArrayView<1, Container> {
   }
 
   // useless methods
-  ViewWithContainer<1, Container> operator*(uint32_t lambda) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<1, Container> operator*(uint32_t lambda)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
@@ -187,21 +192,25 @@ class ArrayView<1, Container> {
 
     return {view, container};
   }
-  ViewWithContainer<1, Container> operator+(const ArrayView<1, Container>& other) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<1, Container> operator+(const ArrayView<1, Container>& other)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
+    if (GetLength() != other.GetLength()) throw std::logic_error("ArrayView::operator+, they are not same length");
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
-      container->operator[](i) += other.dimensions_[other.start_ + i];
+      container->operator[](i) += other.container_->operator[](other.start_ + i);
     }
     auto view = ArrayView<1, Container>(*container, 0, end_ - start_);
 
     return {view, container};
   }
-  ViewWithContainer<1, Container> operator-(const ArrayView<1, Container>& other) requires concepts::IsRandomAccessContainerWithVectors<Container> {
+  ViewWithContainer<1, Container> operator-(const ArrayView<1, Container>& other)
+    requires concepts::IsRandomAccessContainerWithVectors<Container> {
+    if (GetLength() != other.GetLength()) throw std::logic_error("ArrayView::operator-, they are not same length");
     auto container = new Container(container_->size() - start_);
     for (size_t i = 0; i != end_ - start_; ++i) {
       container->operator[](i) = container_->operator[](start_ + i);
-      container->operator[](i) -= other.dimensions_[other.start_ + i];
+      container->operator[](i) -= other.container_->operator[](other.start_ + i);
     }
     auto view = ArrayView<1, Container>(*container, 0, end_ - start_);
 
@@ -223,7 +232,7 @@ class ArrayView<1, Container> {
 template <size_t Dimension, concepts::IsRandomAccessContainer Container>
 struct ViewWithContainer {
   ArrayView<Dimension, Container> view;
-  Container container;
+  Container* container;
 };
 
 }  // namespace uint17
@@ -231,7 +240,7 @@ struct ViewWithContainer {
 template <size_t Dimension, uint17::concepts::IsRandomAccessContainer Container>
 std::ostream& operator<<(std::ostream& stream, const uint17::ArrayView<Dimension, Container>& view) {
   Container& data = view.GetContainer();
-  for (size_t i = 0; i != data.size() - 1; ++i) {
+  for (size_t i = view.GetStart(); i != data.size() - 1; ++i) {
     stream << data[i] << " ";
   }
   stream << data[data.size() - 1];
@@ -242,7 +251,7 @@ std::ostream& operator<<(std::ostream& stream, const uint17::ArrayView<Dimension
 template <size_t Dimension,uint17::concepts::IsRandomAccessContainer Container>
 std::istream& operator>>(std::istream& stream, uint17::ArrayView<Dimension, Container>& view) {
   Container& data = view.GetContainer();
-  for (size_t i = 0; i != data.size(); ++i) stream >> data[i];
+  for (size_t i = view.GetStart(); i != data.size(); ++i) stream >> data[i];
 
   return stream;
 }
