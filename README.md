@@ -45,7 +45,7 @@ UPD: на самом деле, это не все
 - В файлах [array.h](src/uint17/array.h) и [array.cc](src/uint17/array.cc) содержится массив 17-битных чисел(`Array`), который просто аллоцирует нужное количество памяти,
 при обращении по индексу создает и возвращает `UInt17View`. Т.е. работает по принципу `std::vector<bool>`
 - В файле [array_view.h](src/uint17/array_view.h) содержится класс `ArrayView<Dimension, Container>`, который принимает в себя любой контейнер с определенными методами `size()` и `operator[](size_t)`
-и представляет его память как n-мерный массив (`Dimension` - мерность, `Container` - тип массива)
+и представляет его память как n-мерный массив (`Dimension` - мерность, `Container` - тип массива) <br/>
 Пример использования:
 ```cpp
 std::vector<std::string> some_container = {"hello", "world", "some", "words"};
