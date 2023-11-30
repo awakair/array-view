@@ -38,14 +38,11 @@ Array::Array(const Array& other) : Array(other.length_) {
 
 Array& Array::operator=(const Array& other) {
   if (this == &other) return *this;
-  if (length_ != other.length_) {
-    delete[] data_;
-    length_ = other.length_;
-    length_in_bytes_ = other.length_in_bytes_;
-    data_ = new uint8_t[length_in_bytes_];
-  }
 
-  for (size_t i = 0; i != length_in_bytes_; ++i) data_[i] = other.data_[i];
+  Array copy(other);
+  utils::Swap(length_, copy.length_);
+  utils::Swap(length_in_bytes_, copy.length_in_bytes_);
+  utils::Swap(data_, copy.data_);
 
   return *this;
 }

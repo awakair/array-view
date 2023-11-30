@@ -13,10 +13,4 @@ void Swap(T& a, T& b) { // I am not allowed to use std::swap
   b = std::move(tmp);
 }
 
-template <typename First, typename Second>
-struct Pair {
-  First first;
-  Second second;
-};
-
 } // namespace uint17::utils
