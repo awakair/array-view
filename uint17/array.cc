@@ -40,9 +40,7 @@ Array& Array::operator=(const Array& other) {
   if (this == &other) return *this;
 
   Array copy(other);
-  utils::Swap(length_, copy.length_);
-  utils::Swap(length_in_bytes_, copy.length_in_bytes_);
-  utils::Swap(data_, copy.data_);
+  utils::Swap(*this, copy);
 
   return *this;
 }
