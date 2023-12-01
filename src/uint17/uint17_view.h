@@ -7,6 +7,7 @@ namespace uint17 {
 
 class UInt17View {
  public:
+  static const uint8_t kBitLength = 17;
   UInt17View(uint8_t* data, uint8_t offset);
   UInt17View& SetToZero();
   UInt17View& operator=(uint16_t number);

@@ -57,13 +57,13 @@ Array& Array::operator=(Array&& other) {
 size_t Array::size() const { return length_; }
 
 UInt17View Array::operator[](size_t index) {
-  const auto start_of_number = index * 17;
+  const auto start_of_number = index * UInt17View::kBitLength;
 
   return UInt17View(data_ + start_of_number / 8, start_of_number % 8);
 }
 
 const UInt17View Array::operator[](size_t index) const {
-  const auto start_of_number = index * 17;
+  const auto start_of_number = index * UInt17View::kBitLength;
 
   return UInt17View(data_ + start_of_number / 8, start_of_number % 8);
 }

@@ -14,7 +14,7 @@ const uint8_t kGetLastByte[] = {0b10000000, 0b11000000, 0b11100000, 0b11110000,
 }
 
 UInt17View::UInt17View(uint8_t* data, const uint8_t offset)
-  : data_(data), start_(offset), end_(17 - (8 - start_ + 8) - 1) {}
+  : data_(data), start_(offset), end_(kBitLength - (8 - start_ + 8) - 1) {}
 
 UInt17View& UInt17View::SetToZero() {
   data_[0] &= bitwise_actions::kResetFirstByte[start_];
@@ -43,12 +43,12 @@ UInt17View& UInt17View::operator=(const uint32_t number) {
     Then I just set second byte to next 8 bits of my number
     To do it I can just shift my number to remove it's last bits
    */
-  const auto shift_second_part = 17 - n - 8;
+  const auto shift_second_part = kBitLength - n - 8;
   data_[1] = static_cast<uint8_t>(number >> shift_second_part);
   /*
     Finally I can just shift my number to the right to execute bitwise or with third byte
    */
-  const auto left_bits = 17 - n - 8;
+  const auto left_bits = kBitLength - n - 8;
   const auto shift_third_part = 8 - left_bits;
   data_[2] |= static_cast<uint8_t>(number) << shift_third_part;
 
