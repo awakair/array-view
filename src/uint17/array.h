@@ -17,7 +17,6 @@ class Array {
   Array(const Array& other);
   Array& operator=(const Array& other);
   Array& operator=(Array&& other);
-  [[nodiscard]] size_t GetLength() const;
   [[nodiscard]] size_t size() const;
   UInt17View operator[](size_t index);
   const UInt17View operator[](size_t index) const;

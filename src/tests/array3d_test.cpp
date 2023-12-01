@@ -204,13 +204,6 @@ TEST(ArrayTest, MoveAssingmentOperator) {
   ASSERT_EQ(array2[4].ToUInt32(), 5);
 }
 
-TEST(ArrayTest, GetLengthTest) {
-  ASSERT_EQ(Array(5).GetLength(), 5);
-  ASSERT_EQ(Array(19).GetLength(), 19);
-  ASSERT_EQ(Array(108).GetLength(), 108);
-  ASSERT_EQ(Array(504).GetLength(), 504);
-}
-
 TEST(ArrayTest, SizeTest) {
   ASSERT_EQ(Array(5).size(), 5);
   ASSERT_EQ(Array(19).size(), 19);
@@ -285,7 +278,7 @@ TEST(Array1DViewTest, GetLengthTest) {
   ArrayView<1> view(array);
 
 
-  ASSERT_EQ(array.GetLength(), view.GetLength());
+  ASSERT_EQ(array.size(), view.GetLength());
 }
 
 TEST(Array1DViewTest, GetContainerTest) {

@@ -37,7 +37,9 @@ Array::Array(const Array& other) : Array(other.length_) {
 }
 
 Array& Array::operator=(const Array& other) {
-  if (this == &other) return *this;
+  if (this == &other) {
+    return *this;
+  }
 
   Array copy(other);
   utils::Swap(*this, copy);
@@ -51,8 +53,6 @@ Array& Array::operator=(Array&& other) {
 
   return *this;
 }
-
-size_t Array::GetLength() const { return length_; }
 
 size_t Array::size() const { return length_; }
 
@@ -69,13 +69,17 @@ const UInt17View Array::operator[](size_t index) const {
 }
 
 UInt17View Array::At(size_t index) {
-  if (index >= length_) throw std::out_of_range("Array::at");
+  if (index >= length_) {
+    throw std::out_of_range("Array::at");
+  }
 
   return this->operator[](index);
 }
 
 const UInt17View Array::At(size_t index) const {
-  if (index >= length_) throw std::out_of_range("Array::at");
+  if (index >= length_) {
+    throw std::out_of_range("Array::at");
+  }
 
   return this->operator[](index);
 }
