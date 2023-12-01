@@ -10,8 +10,9 @@
 namespace uint17 {
 
 template <typename T>
-concept NumberView = std::constructible_from<T, uint8_t*, size_t> && requires(T number) {
+concept NumberView = std::constructible_from<T, uint8_t*, size_t> && requires(T n, uint32_t v) {
   { T::kBitLength } -> std::same_as<const size_t&>;
+  n = v;
 };
 
 template <NumberView View = UInt17View>
@@ -30,7 +31,7 @@ class Array {
     size_t i = 0;
     for (uint32_t elem : elems) {
       const auto start_of_number = i * View::kBitLength;
-      UInt17View(data_ + start_of_number / 8, start_of_number % 8) = elem;
+      View(data_ + start_of_number / 8, start_of_number % 8) = elem;
       ++i;
     }
   }
