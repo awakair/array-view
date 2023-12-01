@@ -11,7 +11,7 @@ namespace uint17 {
 
 template <typename T>
 concept NumberView = std::constructible_from<T, uint8_t*, size_t> && requires(T n, uint32_t v) {
-  { T::kBitLength } -> std::same_as<const size_t&>;
+  std::same_as<decltype(T::kBitLength), const  size_t>;
   n = v;
 };
 
