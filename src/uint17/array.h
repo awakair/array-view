@@ -45,7 +45,9 @@ class Array {
   }
   Array(const Array& other): Array(other.length_) {
     // std::memcpy(data_, other.data_, length_);  Not allowed to use memcpy by TA. But why???
-    for (size_t i = 0; i != length_in_bytes_; ++i) data_[i] = other.data_[i];
+    for (size_t i = 0; i != length_in_bytes_; ++i) {
+      data_[i] = other.data_[i];
+    }
   }
   Array& operator=(const Array& other) {
     if (this == &other) {
