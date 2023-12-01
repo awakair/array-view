@@ -277,12 +277,12 @@ TEST(Array1DViewTest, GetLengthTest) {
   Array array = {1, 2, 3, 4, 5};
   ArrayView<1> view(array);
 
-
   ASSERT_EQ(array.size(), view.GetLength());
 }
 
 TEST(Array1DViewTest, GetContainerTest) {
   Array array = {1, 2, 3, 4, 5};
+
   ASSERT_EQ(&ArrayView<1>(array).GetContainer(), &array);
 }
 
@@ -291,6 +291,7 @@ TEST(Array1DViewTest, MultTest) {
   ArrayView<1> view = array1;
   uint32_t lambda = 2;
   auto [result, array] = view * lambda;
+
   ASSERT_EQ(result[0].ToUInt32(), view[0].ToUInt32() * lambda);
   ASSERT_EQ(result[1].ToUInt32(), view[1].ToUInt32() * lambda);
   ASSERT_EQ(result[2].ToUInt32(), view[2].ToUInt32() * lambda);
@@ -363,6 +364,7 @@ TEST(Array1DViewTest, InputTest) {
   std::stringstream input_stream(input);
   auto [view, array] = ArrayView<1>::MakeArray(5);
   input_stream >> view;
+
   ASSERT_EQ(view[0].ToUInt32(), 1u);
   ASSERT_EQ(view[1].ToUInt32(), 2u);
   ASSERT_EQ(view[2].ToUInt32(), 3u);
@@ -376,6 +378,7 @@ TEST(Array1DViewTest, OutputTest) {
   Array array = {1, 2, 3, 4, 5};
   ArrayView<1> view(array);
   output_stream << view;
+
   ASSERT_EQ(output_stream.str(), "1 2 3 4 5");
 }
 
@@ -386,6 +389,7 @@ TEST(Array2DViewTest, EmptyTest) {
 
 TEST(Array2DViewTest, WrongViewTest) {
   Array array = {1, 2, 3};
+
   ASSERT_ANY_THROW(ArrayView<2>(array, 0, 2u, 2u));
 }
 
@@ -451,6 +455,7 @@ TEST(Array2DViewTest, MultTest) {
   ArrayView<2> view(array1, 0, 2u, 3u);
   uint32_t lambda = 2;
   auto [result, array] = view * lambda;
+
   ASSERT_EQ(result.Get(0u, 0u).ToUInt32(), view.Get(0u, 0u).ToUInt32() * lambda);
   ASSERT_EQ(result.Get(0u, 1u).ToUInt32(), view.Get(0u, 1u).ToUInt32() * lambda);
   ASSERT_EQ(result.Get(0u, 2u).ToUInt32(), view.Get(0u, 2u).ToUInt32() * lambda);
@@ -536,6 +541,7 @@ TEST(Array2DViewTest, OutputTest) {
   Array array = {1, 2, 3, 4, 5};
   ArrayView<2> view(array, 1, 2u, 2u);
   output_stream << view;
+
   ASSERT_EQ(output_stream.str(), "2 3 4 5");
 }
 
@@ -600,6 +606,7 @@ TEST(Array3DViewTest, MultTest) {
   ArrayView<3> view(array1, 0, 2u, 2u, 2u);
   uint32_t lambda = 2;
   auto [result, array] = view * lambda;
+
   ASSERT_EQ(result.Get(0u, 0u, 0u).ToUInt32(), view.Get(0u, 0u, 0u).ToUInt32() * lambda);
   ASSERT_EQ(result.Get(0u, 0u, 1u).ToUInt32(), view.Get(0u, 0u, 1u).ToUInt32() * lambda);
   ASSERT_EQ(result.Get(0u, 1u, 0u).ToUInt32(), view.Get(0u, 1u, 0u).ToUInt32() * lambda);
@@ -687,6 +694,7 @@ TEST(Array3DViewTest, InputTest) {
   std::stringstream input_stream(input);
   auto [view, array] = ArrayView<3>::MakeArray(2u, 2u, 2u);
   input_stream >> view;
+
   ASSERT_EQ(view[0][0][0].ToUInt32(), 1u);
   ASSERT_EQ(view[0][0][1].ToUInt32(), 2u);
   ASSERT_EQ(view[0][1][0].ToUInt32(), 3u);
@@ -703,5 +711,6 @@ TEST(Array3DViewTest, OutputTest) {
   Array array = {1, 2, 3, 4, 5, 6, 7, 8};
   ArrayView<3> view(array, 0, 2u, 2u, 2u);
   output_stream << view;
+
   ASSERT_EQ(output_stream.str(), "1 2 3 4 5 6 7 8");
 }
