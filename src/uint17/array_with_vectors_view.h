@@ -14,7 +14,7 @@ concept RandomAccessContainerWithVectors = RandomAccessContainer<T> && requires(
 template <size_t Dimension, RandomAccessContainerWithVectors Container>
 struct VectorsViewWithContainer;
 
-template <size_t Dimension, RandomAccessContainerWithVectors Container = Array>
+template <size_t Dimension, RandomAccessContainerWithVectors Container = Array<UInt17View>>
 class ArrayWithVectorsView: public ArrayView<Dimension, Container> {
  public:
   using ArrayView<Dimension, Container>::ArrayView;

@@ -24,7 +24,7 @@ concept RandomAccessContainer = std::constructible_from<T, size_t> && requires(T
 template <size_t Dimension, RandomAccessContainer Container>
 struct ViewWithContainer;
 
-template <size_t Dimension, RandomAccessContainer Container = Array>
+template <size_t Dimension, RandomAccessContainer Container = Array<UInt17View>>
 class ArrayView {
  public:
   template <typename... Args> requires Dimensions<Dimension, Args...>
