@@ -57,3 +57,4 @@ std::cout << view[0][0] << " " << view[0][1] << " " << view[1][0] << " " << view
 // hello world some words
 ```
 Находится в `namespace uint17`, т.к. требовалась одна библиотека
+- Все необходимые операторы реализует [наследник ArrayView](src/uint17/array_with_vectors_view.h)
