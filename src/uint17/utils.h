@@ -2,8 +2,6 @@
 
 #include <utility>
 
-
-
 namespace uint17::utils {
 
 template <typename T>
