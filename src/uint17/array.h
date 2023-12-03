@@ -35,9 +35,6 @@ class Array {
       ++i;
     }
   }
-  ~Array() {
-    delete[] data_;
-  }
   Array(Array&& other): length_in_bytes_(other.length_in_bytes_), length_(other.length_) {
     data_ = other.data_;
     other.data_ = nullptr;
@@ -66,6 +63,9 @@ class Array {
     utils::Swap(length_in_bytes_, other.length_in_bytes_);
 
     return *this;
+  }
+  ~Array() {
+    delete[] data_;
   }
   [[nodiscard]] size_t size() const { return length_; }
   View operator[](size_t index) {
