@@ -134,7 +134,9 @@ std::ostream& operator<<(std::ostream& stream, const uint17::ArrayWithVectorsVie
 template <size_t Dimension, uint17::RandomAccessContainer Container>
 std::istream& operator>>(std::istream& stream, uint17::ArrayWithVectorsView<Dimension, Container>& view) {
   Container& data = view.GetContainer();
-  for (size_t i = view.GetStart(); i != data.size(); ++i) stream >> data[i];
+  for (size_t i = view.GetStart(); i != data.size(); ++i) {
+    stream >> data[i];
+  }
 
   return stream;
 }
