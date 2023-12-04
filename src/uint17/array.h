@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <concepts>
+#include <climits>
 #include "uint17_view.h"
 #include "utils.h"
 
@@ -20,18 +21,18 @@ class Array {
  public:
   explicit Array(size_t length): length_(length) {
     const auto length_in_bits = length * View::kBitLength;
-    length_in_bytes_ = (length_in_bits % 8 == 0) ? length_in_bits / 8 : length_in_bits / 8 + 1;
+    length_in_bytes_ = (length_in_bits % CHAR_BIT == 0) ? length_in_bits / CHAR_BIT : length_in_bits / CHAR_BIT + 1;
     data_ = new uint8_t[length_in_bytes_];
   }
   Array(std::initializer_list<uint32_t> elems): length_(elems.size()) {
     const auto length_in_bits = length_ * View::kBitLength;
-    length_in_bytes_ = (length_in_bits % 8 == 0) ? length_in_bits / 8 : length_in_bits / 8 + 1;
+    length_in_bytes_ = (length_in_bits % CHAR_BIT == 0) ? length_in_bits / CHAR_BIT : length_in_bits / CHAR_BIT + 1;
     data_ = new uint8_t[length_in_bytes_];
 
     size_t i = 0;
     for (uint32_t elem : elems) {
       const auto start_of_number = i * View::kBitLength;
-      View(data_ + start_of_number / 8, start_of_number % 8) = elem;
+      View(data_ + start_of_number / CHAR_BIT, start_of_number % CHAR_BIT) = elem;
       ++i;
     }
   }
@@ -71,12 +72,12 @@ class Array {
   View operator[](size_t index) {
     const auto start_of_number = index * View::kBitLength;
 
-    return View(data_ + start_of_number / 8, start_of_number % 8);
+    return View(data_ + start_of_number / CHAR_BIT, start_of_number % CHAR_BIT);
   }
   const View operator[](size_t index) const {
     const auto start_of_number = index * View::kBitLength;
 
-    return View(data_ + start_of_number / 8, start_of_number % 8);
+    return View(data_ + start_of_number / CHAR_BIT, start_of_number % CHAR_BIT);
   }
   View At(size_t index) {
     if (index >= length_) {

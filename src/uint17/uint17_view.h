@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <climits>
 
 namespace uint17 {
 
